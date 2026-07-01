@@ -10,10 +10,9 @@ from GPQ_KVAttention_Full import GPQ_KVAttentionTransformer
 
 
 transform = Compose([
-RandomCrop(32, padding=4),
-RandomHorizontalFlip(),
+ 
 ToTensor(),
-Normalize((0.5, 0.5,0.5),(0.5, 0.5,0.5))
+Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
 
 ])
 
