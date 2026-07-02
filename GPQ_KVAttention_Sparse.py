@@ -159,7 +159,7 @@ class SGPQ_KVAttention(nn.Module):
     
 
 class SGPQ_KVAttentionBlock(nn.Module):
-    def __init__(self, dim, num_patch, num_heads):
+    def __init__(self, dim, num_heads):
 
         super().__init__()
 
@@ -192,11 +192,11 @@ class SGPQ_KVAttentionBlock(nn.Module):
 
 
 class SGPQ_KVAttentionTransformer(nn.Module):
-    def __init__(self, d_model,num_patch, num_heads, num_layers):
+    def __init__(self, d_model, num_heads, num_layers):
         super().__init__()
 
         self.model = nn.Sequential(
-            *[SGPQ_KVAttentionBlock(d_model,num_patch, num_heads) for _ in range(num_layers)]
+            *[SGPQ_KVAttentionBlock(d_model, num_heads) for _ in range(num_layers)]
         )
 
     def forward(self, x):
