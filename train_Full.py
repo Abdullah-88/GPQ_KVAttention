@@ -72,7 +72,7 @@ class TransformerImageClassification(GPQ_KVAttentionTransformer):
 
     ):
         num_patches = check_sizes(image_size, patch_size)
-        super().__init__(d_model, num_patches,num_heads,num_layers)
+        super().__init__(d_model, num_heads, num_layers)
         self.patcher = nn.Conv2d(
             in_channels, d_model, kernel_size=patch_size, stride=patch_size
         )
