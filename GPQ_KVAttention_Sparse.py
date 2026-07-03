@@ -3,7 +3,6 @@ from torch import nn, Tensor
 import torch.nn.functional as F
 
 
-
 class VecDyT(nn.Module):
     def __init__(self, input_shape):
 
