@@ -4,7 +4,7 @@ import torch
 from torch import nn
 from torch.utils.data import DataLoader
 from torchvision import datasets
-from torchvision.transforms import ToTensor, Normalize, RandomCrop, RandomHorizontalFlip, Compose
+from torchvision.transforms import ToTensor, Normalize, Compose
 from GPQ_KVAttention_Full import GPQ_KVAttentionTransformer
 
 
@@ -43,14 +43,6 @@ for X, y in test_dataloader:
     break
 
 
-def check_sizes(image_size, patch_size):
-    sqrt_num_patches, remainder = divmod(image_size, patch_size)
-    assert remainder == 0, "`image_size` must be divisibe by `patch_size`"
-    num_patches = sqrt_num_patches ** 2
-    return num_patches
-
-
-
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -71,7 +63,6 @@ class TransformerImageClassification(GPQ_KVAttentionTransformer):
 
 
     ):
-        num_patches = check_sizes(image_size, patch_size)
         super().__init__(d_model, num_heads, num_layers)
         self.patcher = nn.Conv2d(
             in_channels, d_model, kernel_size=patch_size, stride=patch_size
