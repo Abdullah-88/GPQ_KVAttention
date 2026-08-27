@@ -31,11 +31,11 @@ class VecDyGeluSine(nn.Module):
         return x
 
 class FFUnit(nn.Module):
-    def __init__(self,dim):
+    def __init__(self, dim):
 
         super().__init__()
 
-        self.proj =  nn.Linear(dim,dim,bias=False)
+        self.proj = nn.Linear(dim, dim, bias = False)
         self.modulate = VecDyGeluSine(dim)
 
     def forward(self, x):
@@ -83,9 +83,9 @@ class GPQ_KVAttentionBlock(nn.Module):
 
         super().__init__()
 
-        self.norm_1 =  VecDyT(dim)
-        self.norm_2 =  VecDyT(dim)
-        self.attn = GPQ_KVAttention(dim,num_heads)
+        self.norm_1 = VecDyT(dim)
+        self.norm_2 = VecDyT(dim)
+        self.attn = GPQ_KVAttention(dim, num_heads)
         self.feedforward = FFUnit(dim)
 
     def forward(self, x):
