@@ -84,42 +84,48 @@ def train(dataloader, model, loss_fn, optimizer):
     correct = 0
     for batch, (X,y) in enumerate(dataloader):
         X, y = X.to(device), y.to(device)
-
+               
         pred = model(X)
         loss = loss_fn(pred, y)
-
+               
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
+        
         train_loss += loss.item()
         _, labels = torch.max(pred.data, 1)
-        correct += labels.eq(y.data).type(torch.float).sum()
-
+        correct += labels.eq(y.data).type(torch.float).sum().item()
         if batch % 100 == 0:
             loss, current = loss.item(), batch * len(X)
             print(f"loss: {loss:>7f}   [{current:>5d}/{size:>5d}]")
 
     train_loss /= num_batches
-    train_accuracy = 100. * correct.item() / size
-    print(f"Train Metric: \n Accuracy: {(100 * correct):>0.1f}% \n")
-    return train_loss, train_accuracy
+    correct /= size
+    train_accuracy = 100 * correct
+    print(f"Train Metrics: \n Accuracy: {train_accuracy:>0.1f}%, Avg loss: {train_loss:>8f} \n")
+    return train_loss, train_accuracy 
 
 def test(dataloader, model, loss_fn):
-    size = len(dataloader.dataset)
+    size = len(dataloader.dataset)            
     num_batches = len(dataloader)
     model.eval()
     test_loss = 0
     correct = 0
-
-    for X,y in dataloader:
-      X,y = X.to(device), y.to(device)
-      pred = model(X)
-      test_loss += loss_fn(pred, y).item()
-      correct += (pred.argmax(1) == y).type(torch.float).sum().item()
+    with torch.no_grad():
+        for X,y in dataloader:
+            X,y = X.to(device), y.to(device)
+            
+            pred = model(X)
+            loss = loss_fn(pred, y)
+            
+            test_loss += loss.item()
+            _, labels = torch.max(pred.data, 1)
+            correct += labels.eq(y.data).type(torch.float).sum().item()
+            
     test_loss /= num_batches
     correct /= size
-    print(f"Test Metrics: \n Accuracy: {(100 * correct):>0.1f}%, Avg loss: {test_loss:>8f} \n")
     test_accuracy = 100 * correct
+    print(f"Test Metrics: \n Accuracy: {test_accuracy:>0.1f}%, Avg loss: {test_loss:>8f} \n")        
     return test_loss, test_accuracy
 
 logname = "/PATH/GPQ_KVAttention/Experiments_cifar10/logs_gpq_kva/logs_cifar10.csv"
