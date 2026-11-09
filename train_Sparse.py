@@ -4,30 +4,39 @@ import torch
 from torch import nn
 from torch.utils.data import DataLoader
 from torchvision import datasets
-from torchvision.transforms import ToTensor, Normalize, Compose
+from torchvision.transforms import ToTensor, Normalize, RandomCrop, RandomHorizontalFlip, Compose
 from GPQ_KVAttention_Sparse import SGPQ_KVAttentionTransformer
 
-transform = Compose([
- 
-ToTensor(),
-Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+train_transform = Compose([
+    
+    RandomCrop(32, padding=4),
+    RandomHorizontalFlip(),
+    ToTensor(),
+    Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+    
+])
 
+test_transform = Compose([
+    
+    ToTensor(),
+    Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+    
 ])
 
 training_data = datasets.CIFAR10(
                                        root = 'data',
                                        train = True,
                                        download = True,
-                                       transform = transform
+                                       transform = train_transform 
                                        )
 
 test_data = datasets.CIFAR10(
                                        root = 'data',
                                        train = False,
                                        download = True,
-                                       transform = transform
-                                       )
-
+                                       transform = test_transform 
+                                       )                                       
+                                      
 batch_size = 128
 
 train_dataloader = DataLoader(training_data, batch_size = batch_size, shuffle = True)
